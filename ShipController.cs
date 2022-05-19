@@ -123,16 +123,22 @@ public class ShipController : MonoBehaviour
         Rotate(rotate_direction);
         
         SShip.SetSpeed(_rb.velocity.magnitude);
+        SShip.Position = transform.position;
         refreshStats();      
     }
 
     public void Shoot()
     {
-        for (int i = 0; i < _weapons.Length; i++)
+        if (SShip.Energy > 0)
         {
-            var weapon = _weapons[i];
-            GameObject go = Instantiate(laserBullet, weapon.position, weapon.rotation);
-            go.GetComponent<LaserBulletBehavior>().Owner = gameObject;
+            for (int i = 0; i < _weapons.Length; i++)
+            {
+                var weapon = _weapons[i];
+                GameObject go = Instantiate(laserBullet, weapon.position, weapon.rotation);
+                go.GetComponent<LaserBulletBehavior>().Owner = gameObject;
+
+                SShip.ChangeEnergy(-1);
+            }
         }
     }
 
