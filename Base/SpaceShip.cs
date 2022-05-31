@@ -13,6 +13,8 @@ public class SpaceShip : PhysicalObject
     private float _maxSpeed;
     private float _enginePower;
 
+    public bool IsPlayer;
+
     private List<Item> _inventory;
 
     private Vector3 _position;
@@ -26,18 +28,18 @@ public class SpaceShip : PhysicalObject
         int inventorySize = 10,
         float baseMass = 10f,
         float enginePower = 100f,
-        GameObject shipModel = null,
+        GameObject model = null,
         List<Item> inventory = null
         )
     {
         Name = name;
         Description = description;
         EnginePower = enginePower;
-        HealthSystem = new(maxHealth);
+        HpSystem = new(maxHealth);
         MaxEnergy = maxEnergy;
         MaxSpeed = maxSpeed;
         BaseMass = baseMass;
-        Model = shipModel;
+        Model = model;
 
         Inventory = new List<Item>(inventorySize);
         if (inventory != null)
@@ -47,7 +49,14 @@ public class SpaceShip : PhysicalObject
 
         ComputeMass();
 
-        ChangeEnergy(MaxEnergy);    
+        ChangeEnergy(MaxEnergy);
+
+        HpSystem.OnDead += HpSystem_OnDead;
+    }
+
+    private void HpSystem_OnDead(object sender, EventArgs e)
+    {
+        DestroySelf();
     }
 
     public int Energy
@@ -103,7 +112,7 @@ public class SpaceShip : PhysicalObject
         set => _position = value;
     }
 
-    public int InventorySize { get { return Inventory.Count; } }
+    public int InventorySize => Inventory.Count;
 
     public void ComputeMass()
     {
@@ -161,5 +170,10 @@ public class SpaceShip : PhysicalObject
         }
 
         _energy = newEnergy >= _maxEnergy ? _maxEnergy : newEnergy;
+    }
+
+    public override void DestroySelf()
+    {
+        Core.Explode(GmObject, 1f, null, IsPlayer);
     }
 }

@@ -78,7 +78,7 @@ public class DockBehavior : MonoBehaviour
 
                 if (_spaceShip.Health != _spaceShip.MaxHealth)
                 {
-                    _spaceShip.ChangeHealth(_healthRegenSpeed);
+                    _spaceShip.Heal(_healthRegenSpeed);
                 }
             }
 

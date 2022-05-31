@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,16 +17,29 @@ public class Asteroid : PhysicalObject
     {
             Name = name;
             Description = description;
-            HealthSystem = new(maxHealth);
+            HpSystem = new(maxHealth);
             BaseMass = baseMass;
             Model = model;
             Droppables = droppables;
+
+        HpSystem.OnDead += HpSystem_OnDead;
+    }
+
+    private void HpSystem_OnDead(object sender, EventArgs e)
+    {
+        DestroySelf();
     }
 
     public Item[] Droppables
     {
         get { return _droppables; }
         private set { _droppables = value; }
+    }
+
+    public override void DestroySelf()
+    {
+        Debug.Log("[Asteroid] Should be destroyed");
+        Core.Explode(GmObject, 2f);
     }
 
     public void Drop()

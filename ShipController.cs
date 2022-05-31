@@ -35,7 +35,12 @@ public class ShipController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SShip = new();
+        SShip = new()
+        {
+            GmObject = gameObject,
+            IsPlayer = true
+        };
+
         playerStats = new();
         refreshStats();
 
@@ -174,24 +179,27 @@ public class ShipController : MonoBehaviour
     {
         if (_rb.velocity.magnitude > 0)
         {
-            float x_velocity = approximateToZero(_rb.velocity.x, stopModifier);
-            float y_velocity = approximateToZero(_rb.velocity.y, stopModifier);
-            float z_velocity = approximateToZero(_rb.velocity.z, stopModifier);
+            float x_velocity = ApproximateToZero(_rb.velocity.x, stopModifier);
+            float y_velocity = ApproximateToZero(_rb.velocity.y, stopModifier);
+            float z_velocity = ApproximateToZero(_rb.velocity.z, stopModifier);
 
             _rb.velocity = new Vector3(x_velocity, y_velocity, z_velocity);
         }
 
         if (_rb.angularVelocity.magnitude > 0)
         {
-            float x_velocity = approximateToZero(_rb.angularVelocity.x, stopModifier);
-            float y_velocity = approximateToZero(_rb.angularVelocity.y, stopModifier);
-            float z_velocity = approximateToZero(_rb.angularVelocity.z, stopModifier);
+            float x_velocity = ApproximateToZero(_rb.angularVelocity.x, stopModifier);
+            float y_velocity = ApproximateToZero(_rb.angularVelocity.y, stopModifier);
+            float z_velocity = ApproximateToZero(_rb.angularVelocity.z, stopModifier);
 
             _rb.angularVelocity = new Vector3(x_velocity, y_velocity, z_velocity);
         }
     }
 
-    private float approximateToZero(float input, float stepModifier, float threshold = 0.01f)
+    private float ApproximateToZero(
+        float input,
+        float stepModifier,
+        float threshold = 0.01f)
     {
         float output = 0f;
 
@@ -216,7 +224,7 @@ public class ShipController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         int damage = Convert.ToInt16(SShip.Speed * collisionDamageModifier);
-        SShip.ChangeHealth(-damage);
+        SShip.Damage(damage);
 
 
         Debug.Log($"Damage taken: {damage} and HP remains: {SShip.Health}");

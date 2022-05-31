@@ -28,9 +28,9 @@ public class HealthSystem
         return (float)Health / HealthMax;
     }
 
-    public void ChangeHealth(int changeAmount)
+    public void Damage(int damageAmount)
     {
-        Health += changeAmount;
+        Health -= damageAmount;
 
         //on health less than 0 just making it zero
         //and calling onDead envent
@@ -39,12 +39,23 @@ public class HealthSystem
             Health = 0;
             OnDead?.Invoke(this, EventArgs.Empty);
         }
-        else if (Health > HealthMax)
+
+        //Calling health changed event
+        OnHealthChanged?.Invoke(this, EventArgs.Empty);
+        OnDamaged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void Heal(int healAmount)
+    {
+        Health += healAmount;
+
+        if (Health > HealthMax)
         {
             Health = HealthMax;
         }
 
         //Calling health changed event
         OnHealthChanged?.Invoke(this, EventArgs.Empty);
+        OnHealed?.Invoke(this, EventArgs.Empty);
     }
 }

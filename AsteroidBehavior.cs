@@ -10,28 +10,18 @@ public class AsteroidBehavior : MonoBehaviour
     {
         if (asteroid == null)
         {
-            asteroid = new Asteroid();
+            asteroid = new Asteroid
+            {
+                GmObject = gameObject
+            };
         }
     }
 
     public void GetDamage(int damage)
     {
-        if (asteroid.Health - damage > 0)
-        {
-            asteroid.ChangeHealth(-damage);
-        }
-        else
-        {
-            asteroid.ChangeHealth(-asteroid.Health);
-            DestroySelf();
-        }
+        asteroid.Damage(damage);
     }
 
-    private void DestroySelf()
-    {
-        asteroid.Drop();
-        Destroy(gameObject);
-    }
 
     private void OnCollisionEnter(Collision collision)
     {

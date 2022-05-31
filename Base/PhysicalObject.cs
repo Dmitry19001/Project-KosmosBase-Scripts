@@ -14,21 +14,32 @@ public abstract class PhysicalObject : IDamageable
     private string _description;
 
     private GameObject _model;
+    private GameObject _gameObject;
 
     public PhysicalObject(
         string name = "Physical Object",
         string description = "Object that has hp and mass!",
         int maxHealth = 300,
         float baseMass = 10f,
+        GameObject gameObject = null,
         GameObject model = null
         )
     {
         Name = name;
         Description = description;
-        HealthSystem = new(maxHealth);
+        HpSystem = new(maxHealth);
         BaseMass = baseMass;
         Model = model;
+        GmObject = gameObject;
+
+        //HpSystem.OnDead += HpSystem_OnDead;
     }
+
+    //private void HpSystem_OnDead(object sender, EventArgs e)
+    //{
+    //    Debug.Log("[Abstract] Should be destroyed");
+    //    DestroySelf();
+    //}
 
     public string Name
     {
@@ -57,12 +68,12 @@ public abstract class PhysicalObject : IDamageable
     public int Health
     {
         //Health setting is going to be through ChangeHeath method
-        get =>  HealthSystem.Health;
+        get => HpSystem.Health;
     }
 
     public int MaxHealth
     {
-        get => HealthSystem.HealthMax;
+        get => HpSystem.HealthMax;
     }
 
     public float Mass
@@ -82,10 +93,19 @@ public abstract class PhysicalObject : IDamageable
         get => _model;
         set => _model = value;
     }
-    public HealthSystem HealthSystem { get => _healthSystem; set => _healthSystem = value; }
+    public HealthSystem HpSystem { get => _healthSystem; set => _healthSystem = value; }
+    public GameObject GmObject { get => _gameObject; set => _gameObject = value; }
 
     public void Damage(int damageAmount)
     {
-        HealthSystem.ChangeHealth(damageAmount);
+        HpSystem.Damage(damageAmount);
     }
+
+    public void Heal(int healAmount)
+    {
+        HpSystem.Heal(healAmount);
+    }
+
+    public abstract void DestroySelf();
+
 }
