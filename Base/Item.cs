@@ -2,17 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Item
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    string _name;
+    float _weight;
+    float _inventoryWeight; //Means how many slots will be used in inventory 1,2,3 etc
 
-    // Update is called once per frame
-    void Update()
+
+
+    string Name
     {
-        
+        get
+        {
+            return _name;
+        }
+        set
+        {
+            if (value != null && value.Trim().Length > 0)
+            {
+                _name = value;
+            }
+            else
+            {
+                _name = "Unknown Item";
+            }
+        }
     }
 }

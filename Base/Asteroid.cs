@@ -16,12 +16,10 @@ public class Asteroid : PhysicalObject
     {
             Name = name;
             Description = description;
-            MaxHealth = maxHealth;
+            HealthSystem = new(maxHealth);
             BaseMass = baseMass;
             Model = model;
             Droppables = droppables;
-
-            ChangeHealth(MaxHealth);
     }
 
     public Item[] Droppables

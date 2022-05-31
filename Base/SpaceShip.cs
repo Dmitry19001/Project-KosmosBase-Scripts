@@ -15,6 +15,8 @@ public class SpaceShip : PhysicalObject
 
     private List<Item> _inventory;
 
+    private Vector3 _position;
+
     public SpaceShip(
         string name = "SSHP-01",
         string description = "Your first ship and maybe only one!",
@@ -31,7 +33,7 @@ public class SpaceShip : PhysicalObject
         Name = name;
         Description = description;
         EnginePower = enginePower;
-        MaxHealth = maxHealth;
+        HealthSystem = new(maxHealth);
         MaxEnergy = maxEnergy;
         MaxSpeed = maxSpeed;
         BaseMass = baseMass;
@@ -45,48 +47,37 @@ public class SpaceShip : PhysicalObject
 
         ComputeMass();
 
-        ChangeHealth(MaxHealth);
         ChangeEnergy(MaxEnergy);    
     }
 
     public int Energy
     {
         //Energy setting is going to be through ChangeEnergy method
-        get { return _energy; }
-        private set { _energy = value; }
+        get => _energy;
+        private set => _energy = value;
     }
 
     public int MaxEnergy
     {
-        get { return _maxEnergy; }
-        set
-        {
-            if (value > 0)
-                _maxEnergy = value;
-            else
-                _maxEnergy = 1;
-        }
+        get => _maxEnergy;
+        set => _maxEnergy = value > 0 ? value : 1;
     }
 
-    public float MaxSpeed 
+    public float MaxSpeed
     {
-        get { return _maxSpeed; }
-        set
-        {
-            if (value > 0f)
-                _maxSpeed = value;
-            else
-                _maxSpeed = 1f;
-        }
+        get => _maxSpeed;
+        set => _maxSpeed = value > 0f ? value : 1f;
     }
 
     public float Speed
     {
-        get { return _speed; }
-        set 
-        { 
+        get => _speed;
+        set
+        {
             if (value >= 0 && value <= MaxSpeed)
-                _speed = value; 
+            {
+                _speed = value;
+            }
         }
     }
     public void SetSpeed(float speed)
@@ -96,19 +87,27 @@ public class SpaceShip : PhysicalObject
 
     public float EnginePower
     {
-        get { return _enginePower; }
-        set 
-        { 
+        get => _enginePower;
+        set
+        {
             if (value >= 0)
-                _enginePower = value; 
+            {
+                _enginePower = value;
+            }
         }
+    }
+
+    public Vector3 Position
+    {
+        get => _position;
+        set => _position = value;
     }
 
     public int InventorySize { get { return Inventory.Count; } }
 
     public void ComputeMass()
     {
-        var mass = base.BaseMass;
+        float mass = BaseMass;
 
         if (Inventory != null && Inventory.Count > 0)
         {
@@ -125,11 +124,11 @@ public class SpaceShip : PhysicalObject
             base.Mass = mass;
     }
 
-    public List<Item> Inventory 
+    public List<Item> Inventory
     {
-        get { return _inventory; }
+        get => _inventory;
         //Unsafe to use, will overwrite everything in exsisting inventory
-        set { _inventory = value; }
+        set => _inventory = value;
     }
 
     public void ChangeInventorySize(int changeTo)
@@ -153,7 +152,7 @@ public class SpaceShip : PhysicalObject
 
     public void ChangeEnergy(int energy)
     {
-        var newEnergy = energy + _energy;
+        int newEnergy = energy + _energy;
 
         if (newEnergy < 0)
         {
@@ -161,13 +160,6 @@ public class SpaceShip : PhysicalObject
             return;
         }
 
-        if (newEnergy >= _maxEnergy)
-        {
-            _energy = _maxEnergy;
-        }
-        else
-        {
-            _energy = newEnergy;
-        }
+        _energy = newEnergy >= _maxEnergy ? _maxEnergy : newEnergy;
     }
 }

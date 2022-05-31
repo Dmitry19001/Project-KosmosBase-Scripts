@@ -3,10 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PhysicalObject
+public abstract class PhysicalObject : IDamageable
 {
-    private int _health;
-    private int _maxHealth;
+    private HealthSystem _healthSystem;
 
     private float _mass;
     private float _baseMass;
@@ -26,16 +25,14 @@ public abstract class PhysicalObject
     {
         Name = name;
         Description = description;
-        MaxHealth = maxHealth;
+        HealthSystem = new(maxHealth);
         BaseMass = baseMass;
         Model = model;
-
-        ChangeHealth(MaxHealth);
     }
 
     public string Name
     {
-        get { return _name; }
+        get => _name;
         set
         {
             if (value != null && value.Trim().Length > 0)
@@ -47,7 +44,7 @@ public abstract class PhysicalObject
 
     public string Description
     {
-        get { return _description; }
+        get => _description;
         set
         {
             if (value != null && value.Trim().Length > 0)
@@ -60,63 +57,35 @@ public abstract class PhysicalObject
     public int Health
     {
         //Health setting is going to be through ChangeHeath method
-        get { return _health; }
-        private set { _health = value; }
+        get =>  HealthSystem.Health;
     }
 
     public int MaxHealth
     {
-        get { return _maxHealth; }
-        set
-        {
-            if (value > 0)
-                _maxHealth = value;
-            else
-                _maxHealth = 1;
-        }
+        get => HealthSystem.HealthMax;
     }
 
     public float Mass
     {
-        get { return _mass; }
-        set { _mass = value; }
+        get => _mass;
+        set => _mass = value;
     }
 
     public float BaseMass
     {
-        get { return _baseMass; }
-        set
-        {
-            if (value > 0f)
-                _baseMass = value;
-            else
-                _baseMass = 10f;
-        }
+        get => _baseMass;
+        set => _baseMass = value > 0f ? value : 10f;
     }
 
     public GameObject Model
     {
-        get { return _model; }
-        set { _model = value; }
+        get => _model;
+        set => _model = value;
     }
+    public HealthSystem HealthSystem { get => _healthSystem; set => _healthSystem = value; }
 
-    public void ChangeHealth(int health)
+    public void Damage(int damageAmount)
     {
-        var newHealth = health + this.Health;
-
-        if (newHealth < 0)
-        {
-            Health = 0;
-            return;
-        }
-
-        if (newHealth >= MaxHealth)
-        {
-            Health = MaxHealth;
-        }
-        else
-        {
-            Health = newHealth;
-        }
+        HealthSystem.ChangeHealth(damageAmount);
     }
 }

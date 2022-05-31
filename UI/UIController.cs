@@ -39,7 +39,7 @@ public class UIController : MonoBehaviour
         enemyName = DamageCanvas.transform.Find("EnemyName").GetComponent<TMP_Text>();
 
         DamageCanvas.SetActive(false);
-        StartCoroutine(updateHUD());
+        StartCoroutine(UpdateHUD());
     }
 
     // Update is called once per frame
@@ -81,7 +81,7 @@ public class UIController : MonoBehaviour
         crossHair.rectTransform.position = screenPos /*- new Vector2(10,10)*/;
     }
 
-    IEnumerator updateHUD()
+    IEnumerator UpdateHUD()
     {
         for (; ; )
         {
