@@ -14,7 +14,15 @@ public class HealthSystem
     private int _health;
     private int _healthMax;
 
-    public int HealthMax { get => _healthMax; set => _healthMax = value; }
+    public int HealthMax
+    {
+        get => _healthMax; 
+        set
+        {
+            _healthMax = value;
+            OnHealthMaxChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
     public int Health { get => _health; set => _health = value; }
 
     public HealthSystem(int healhtMax)
