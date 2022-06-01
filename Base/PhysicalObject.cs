@@ -12,8 +12,6 @@ public abstract class PhysicalObject : IDamageable
 
     private string _name;
     private string _description;
-
-    private GameObject _model;
     private GameObject _gameObject;
 
     public PhysicalObject(
@@ -21,15 +19,13 @@ public abstract class PhysicalObject : IDamageable
         string description = "Object that has hp and mass!",
         int maxHealth = 300,
         float baseMass = 10f,
-        GameObject gameObject = null,
-        GameObject model = null
+        GameObject gameObject = null
         )
     {
         Name = name;
         Description = description;
         HpSystem = new(maxHealth);
         BaseMass = baseMass;
-        Model = model;
         GmObject = gameObject;
 
         //HpSystem.OnDead += HpSystem_OnDead;
@@ -88,11 +84,6 @@ public abstract class PhysicalObject : IDamageable
         set => _baseMass = value > 0f ? value : 10f;
     }
 
-    public GameObject Model
-    {
-        get => _model;
-        set => _model = value;
-    }
     public HealthSystem HpSystem { get => _healthSystem; set => _healthSystem = value; }
     public GameObject GmObject { get => _gameObject; set => _gameObject = value; }
 

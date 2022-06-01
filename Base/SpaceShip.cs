@@ -28,18 +28,13 @@ public class SpaceShip : PhysicalObject
         int inventorySize = 10,
         float baseMass = 10f,
         float enginePower = 100f,
-        GameObject model = null,
+        GameObject gameObject = null,
         List<Item> inventory = null
-        )
+        ) : base(name, description, maxHealth, baseMass, gameObject)
     {
-        Name = name;
-        Description = description;
         EnginePower = enginePower;
-        HpSystem = new(maxHealth);
         MaxEnergy = maxEnergy;
         MaxSpeed = maxSpeed;
-        BaseMass = baseMass;
-        Model = model;
 
         Inventory = new List<Item>(inventorySize);
         if (inventory != null)

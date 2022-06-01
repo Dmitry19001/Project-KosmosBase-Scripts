@@ -11,16 +11,12 @@ public class Asteroid : PhysicalObject
         string description = "Unhabited and dead peace of stardust!",
         int maxHealth = 300,
         float baseMass = 100f,
-        GameObject model = null,
+        GameObject gameObject = null,
         Item[] droppables = null
-        )
+        ) : base(name, description, maxHealth, baseMass, gameObject)
     {
-            Name = name;
-            Description = description;
-            HpSystem = new(maxHealth);
-            BaseMass = baseMass;
-            Model = model;
-            Droppables = droppables;
+
+        Droppables = droppables;
 
         HpSystem.OnDead += HpSystem_OnDead;
     }
