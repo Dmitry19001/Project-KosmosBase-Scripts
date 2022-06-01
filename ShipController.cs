@@ -55,7 +55,6 @@ public class ShipController : MonoBehaviour
         playerStats.Description = SShip.Description;
         playerStats.BaseMass = SShip.BaseMass;
         playerStats.Mass = SShip.Mass;
-        playerStats.ShipModel = SShip.Model;
         playerStats.Health = SShip.Health;
         playerStats.Speed = SShip.Speed;
         playerStats.EnginePower = SShip.EnginePower;
@@ -63,6 +62,7 @@ public class ShipController : MonoBehaviour
         playerStats.MaxSpeed = SShip.MaxSpeed;
         playerStats.Energy = SShip.Energy;
         playerStats.MaxEnergy = SShip.MaxEnergy;
+        playerStats.GmObject = SShip.GmObject;
         playerStats.Inventory = SShip.Inventory;
         playerStats.InventorySize = SShip.InventorySize;
     }
@@ -249,7 +249,7 @@ public class ShipController : MonoBehaviour
         public string Name;
         public string Description;
 
-        public GameObject ShipModel;
+        public GameObject GmObject;
 
         public List<Item> Inventory;
     }
