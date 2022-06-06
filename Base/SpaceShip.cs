@@ -4,67 +4,42 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class SpaceShip : PhysicalObject
+public class SpaceShip : PhysicalObject, IDamageable, IChargeable
 {
-    private int _energy;
-    private int _maxEnergy;
+    [Header("Params")]
+    [SerializeField] private EnergySystem _energySystem;
 
-    private float _speed;
-    private float _maxSpeed;
-    private float _enginePower;
+    [SerializeField] private int _startEnergy = 200;
 
+    [SerializeField] private float _speed;
+    [SerializeField] private float _maxSpeed = 100f;
+    [SerializeField] private float _enginePower = 100f;
+
+    [SerializeField] private int _inventory_size = 10;
+
+    [Header("Other")]
     public bool IsPlayer;
 
-    private List<Item> _inventory;
+    [SerializeField] private List<Item> _inventory;
+    
 
-    private Vector3 _position;
+    [SerializeField] private Vector3 _position;
 
-    public SpaceShip(
-        string name = "SSHP-01",
-        string description = "Your first ship and maybe only one!",
-        int maxHealth = 300,
-        int maxEnergy = 150,
-        int maxSpeed = 100,
-        int inventorySize = 10,
-        float baseMass = 10f,
-        float enginePower = 100f,
-        GameObject gameObject = null,
-        List<Item> inventory = null
-        ) : base(name, description, maxHealth, baseMass, gameObject)
+    private void Start()
     {
-        EnginePower = enginePower;
-        MaxEnergy = maxEnergy;
-        MaxSpeed = maxSpeed;
+        HealthSystem.Reset();
 
-        Inventory = new List<Item>(inventorySize);
-        if (inventory != null)
-        {
-            Inventory.AddRange(inventory);
-        }
+        _energySystem = new(_startEnergy);
+        Inventory = new List<Item>(_inventory_size);
 
         ComputeMass();
 
-        ChangeEnergy(MaxEnergy);
-
-        HpSystem.OnDead += HpSystem_OnDead;
+        HealthSystem.OnDead += HpSystem_OnDead;
     }
 
     private void HpSystem_OnDead(object sender, EventArgs e)
     {
         DestroySelf();
-    }
-
-    public int Energy
-    {
-        //Energy setting is going to be through ChangeEnergy method
-        get => _energy;
-        private set => _energy = value;
-    }
-
-    public int MaxEnergy
-    {
-        get => _maxEnergy;
-        set => _maxEnergy = value > 0 ? value : 1;
     }
 
     public float MaxSpeed
@@ -117,15 +92,16 @@ public class SpaceShip : PhysicalObject
         {
             for (int i = 0; i < Inventory.Count; i++)
             {
-                var item = Inventory[i];
+                Item item = Inventory[i];
+                mass += item.Mass;
                 //TODO Computing mass by items weight
                 //After Item class implementation
             }
 
-            base.Mass = mass;
+            Mass = mass;
         }
         else
-            base.Mass = mass;
+            Mass = mass;
     }
 
     public List<Item> Inventory
@@ -134,10 +110,18 @@ public class SpaceShip : PhysicalObject
         //Unsafe to use, will overwrite everything in exsisting inventory
         set => _inventory = value;
     }
+    public EnergySystem EnergySystem { get => _energySystem; private set => _energySystem = value; }
 
     public void ChangeInventorySize(int changeTo)
     {
+        List<Item> oldInv = _inventory;
 
+        _inventory = new List<Item>(changeTo);
+
+        //TODO: DROP
+        //Should drop items that doesn't fit inside after size change
+
+        _inventory.AddRange(oldInv);
     }
 
     public void InventoryAdd(Item item)
@@ -151,24 +135,21 @@ public class SpaceShip : PhysicalObject
         if (item != null && index < 0)
             return;
 
-        //TODO: inventory item deleting 
-    }
-
-    public void ChangeEnergy(int energy)
-    {
-        int newEnergy = energy + _energy;
-
-        if (newEnergy < 0)
-        {
-            _energy = 0;
-            return;
-        }
-
-        _energy = newEnergy >= _maxEnergy ? _maxEnergy : newEnergy;
+        //TODO: inventory item dropping 
     }
 
     public override void DestroySelf()
     {
-        Core.Explode(GmObject, 1f, null, IsPlayer);
+        Core.Explode(gameObject, 1f, null, IsPlayer);
+    }
+
+    public void Charge(int chargeAmount)
+    {
+        EnergySystem.Charge(chargeAmount);
+    }
+
+    public void Discharge(int chargeAmount)
+    {
+        EnergySystem.Discharge(chargeAmount);
     }
 }

@@ -3,33 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PhysicalObject : IDamageable
+public abstract class PhysicalObject : MonoBehaviour
 {
-    private HealthSystem _healthSystem;
+    [Header("Info")]
+    [SerializeField] private string _name = "Physical Object";
+    [SerializeField] private string _description = "Object that has hp and mass!";
 
-    private float _mass;
-    private float _baseMass;
+    [Header("Params [BASE]")]
+    [SerializeField] private HealthSystem _healthSystem;
 
-    private string _name;
-    private string _description;
-    private GameObject _gameObject;
+    [SerializeField] private float _mass;
+    [SerializeField] private float _baseMass;
 
-    public PhysicalObject(
-        string name = "Physical Object",
-        string description = "Object that has hp and mass!",
-        int maxHealth = 300,
-        float baseMass = 10f,
-        GameObject gameObject = null
-        )
-    {
-        Name = name;
-        Description = description;
-        HpSystem = new(maxHealth);
-        BaseMass = baseMass;
-        GmObject = gameObject;
+    //[Header("Other [BASE]")]
+    //[SerializeField] private GameObject _gameObject;
 
-        //HpSystem.OnDead += HpSystem_OnDead;
-    }
+    //public PhysicalObject(
+    //    string name = "Physical Object",
+    //    string description = "Object that has hp and mass!",
+    //    int maxHealth = 300,
+    //    float baseMass = 10f,
+    //    GameObject gameObject = null
+    //    )
+    //{
+    //    Name = name;
+    //    Description = description;
+    //    HpSystem = new(maxHealth);
+    //    BaseMass = baseMass;
+    //    GmObject = gameObject;
+
+    //    //HpSystem.OnDead += HpSystem_OnDead;
+    //}
 
     //private void HpSystem_OnDead(object sender, EventArgs e)
     //{
@@ -64,12 +68,12 @@ public abstract class PhysicalObject : IDamageable
     public int Health
     {
         //Health setting is going to be through ChangeHeath method
-        get => HpSystem.Health;
+        get => HealthSystem.Health;
     }
 
     public int MaxHealth
     {
-        get => HpSystem.HealthMax;
+        get => HealthSystem.HealthMax;
     }
 
     public float Mass
@@ -84,17 +88,17 @@ public abstract class PhysicalObject : IDamageable
         set => _baseMass = value > 0f ? value : 10f;
     }
 
-    public HealthSystem HpSystem { get => _healthSystem; set => _healthSystem = value; }
-    public GameObject GmObject { get => _gameObject; set => _gameObject = value; }
+    public HealthSystem HealthSystem { get => _healthSystem; private set => _healthSystem = value; }
+    //public GameObject GmObject { get => _gameObject; set => _gameObject = value; }
 
     public void Damage(int damageAmount)
     {
-        HpSystem.Damage(damageAmount);
+        HealthSystem.Damage(damageAmount);
     }
 
     public void Heal(int healAmount)
     {
-        HpSystem.Heal(healAmount);
+        HealthSystem.Heal(healAmount);
     }
 
     public abstract void DestroySelf();

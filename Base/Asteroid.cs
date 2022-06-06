@@ -5,20 +5,26 @@ using UnityEngine;
 
 public class Asteroid : PhysicalObject
 {
-    private Item[] _droppables;
-    public Asteroid(
-        string name = "Asteroid",
-        string description = "Unhabited and dead peace of stardust!",
-        int maxHealth = 300,
-        float baseMass = 100f,
-        GameObject gameObject = null,
-        Item[] droppables = null
-        ) : base(name, description, maxHealth, baseMass, gameObject)
+    [SerializeField] private Item[] _droppables;
+    //public Asteroid(
+    //    string name = "Asteroid",
+    //    string description = "Unhabited and dead peace of stardust!",
+    //    int maxHealth = 300,
+    //    float baseMass = 100f,
+    //    GameObject gameObject = null,
+    //    Item[] droppables = null
+    //    ) : base(name, description, maxHealth, baseMass, gameObject)
+    //{
+
+    //    Droppables = droppables;
+
+    //    
+    //}
+
+    private void Start()
     {
-
-        Droppables = droppables;
-
-        HpSystem.OnDead += HpSystem_OnDead;
+        HealthSystem.Reset();
+        HealthSystem.OnDead += HpSystem_OnDead;
     }
 
     private void HpSystem_OnDead(object sender, EventArgs e)
@@ -35,7 +41,7 @@ public class Asteroid : PhysicalObject
     public override void DestroySelf()
     {
         Debug.Log("[Asteroid] Should be destroyed");
-        Core.Explode(GmObject, 2f);
+        Core.Explode(gameObject, 2f);
     }
 
     public void Drop()

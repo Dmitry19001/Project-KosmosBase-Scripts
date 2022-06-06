@@ -1,5 +1,7 @@
 using System;
+using UnityEngine;
 
+[Serializable]
 public class HealthSystem
 {
     public event EventHandler OnHealthChanged;
@@ -8,8 +10,8 @@ public class HealthSystem
     public event EventHandler OnHealed;
     public event EventHandler OnDead;
 
-    private int _health;
-    private int _healthMax;
+    [SerializeField] private int _health;
+    [SerializeField] private int _healthMax;
 
     public int HealthMax
     {
@@ -31,6 +33,12 @@ public class HealthSystem
     public float GetHealthNormalized()
     {
         return (float)Health / HealthMax;
+    }
+
+    public void Reset()
+    {
+        Health = HealthMax;
+        OnHealthChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void Damage(int damageAmount)

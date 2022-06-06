@@ -45,7 +45,7 @@ public class DockBehavior : MonoBehaviour
             if (_spaceShip != null)
             {
                 
-                if (_spaceShip.Energy != _spaceShip.MaxEnergy || _spaceShip.Health != _spaceShip.MaxHealth)
+                if (_spaceShip.EnergySystem.Energy != _spaceShip.EnergySystem.EnergyMax || _spaceShip.Health != _spaceShip.MaxHealth)
                 {
                     if (!_isRepairing)
                     {
@@ -71,9 +71,9 @@ public class DockBehavior : MonoBehaviour
         {
             if (_spaceShip != null)
             {
-                if (_spaceShip.Energy != _spaceShip.MaxEnergy)
+                if (_spaceShip.EnergySystem.Energy != _spaceShip.EnergySystem.EnergyMax)
                 {
-                    _spaceShip.ChangeEnergy(_energyLoadSpeed);
+                    _spaceShip.Charge(_energyLoadSpeed);
                 }
 
                 if (_spaceShip.Health != _spaceShip.MaxHealth)

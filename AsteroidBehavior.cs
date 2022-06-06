@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Asteroid))]
+
 public class AsteroidBehavior : MonoBehaviour
 {
     public Asteroid asteroid;
@@ -10,10 +12,7 @@ public class AsteroidBehavior : MonoBehaviour
     {
         if (asteroid == null)
         {
-            asteroid = new Asteroid
-            {
-                GmObject = gameObject
-            };
+            asteroid = GetComponent<Asteroid>();
         }
     }
 

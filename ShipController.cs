@@ -6,12 +6,10 @@ using TMPro;
 using System;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(SpaceShip))]
 
 public class ShipController : MonoBehaviour
 {
-    [Header("Main class")]
-    [SerializeField] private PlayerStats playerStats;
-
     [Header("Player Behavior Settings")]
     [SerializeField] private float collisionDamageModifier = 0.25f;
     [SerializeField] private float speedModifier = 200;
@@ -35,36 +33,10 @@ public class ShipController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SShip = new()
-        {
-            GmObject = gameObject,
-            IsPlayer = true
-        };
-
-        playerStats = new();
-        refreshStats();
-
+        SShip = GetComponent<SpaceShip>();
         _rb = GetComponent<Rigidbody>();
 
         GetWeapons();
-    }
-
-    private void refreshStats()
-    {
-        playerStats.Name = SShip.Name;
-        playerStats.Description = SShip.Description;
-        playerStats.BaseMass = SShip.BaseMass;
-        playerStats.Mass = SShip.Mass;
-        playerStats.Health = SShip.Health;
-        playerStats.Speed = SShip.Speed;
-        playerStats.EnginePower = SShip.EnginePower;
-        playerStats.MaxHealth = SShip.MaxHealth;
-        playerStats.MaxSpeed = SShip.MaxSpeed;
-        playerStats.Energy = SShip.Energy;
-        playerStats.MaxEnergy = SShip.MaxEnergy;
-        playerStats.GmObject = SShip.GmObject;
-        playerStats.Inventory = SShip.Inventory;
-        playerStats.InventorySize = SShip.InventorySize;
     }
 
     private void Awake()
@@ -128,13 +100,12 @@ public class ShipController : MonoBehaviour
         Rotate(rotate_direction);
         
         SShip.SetSpeed(_rb.velocity.magnitude);
-        SShip.Position = transform.position;
-        refreshStats();      
+        SShip.Position = transform.position;     
     }
 
     public void Shoot()
     {
-        if (SShip.Energy > 0)
+        if (SShip.EnergySystem.Energy > 0)
         {
             for (int i = 0; i < _weapons.Length; i++)
             {
@@ -142,7 +113,7 @@ public class ShipController : MonoBehaviour
                 GameObject go = Instantiate(laserBullet, weapon.position, weapon.rotation);
                 go.GetComponent<LaserBulletBehavior>().Owner = gameObject;
 
-                SShip.ChangeEnergy(-1);
+                SShip.Discharge(1);
             }
         }
     }
@@ -228,29 +199,5 @@ public class ShipController : MonoBehaviour
 
 
         Debug.Log($"Damage taken: {damage} and HP remains: {SShip.Health}");
-    }
-
-    //DEBUG ONLY
-    [Serializable]
-    public struct PlayerStats
-    {
-        public int Health;
-        public int MaxHealth;
-        public int Energy;
-        public int MaxEnergy;
-        public int InventorySize;
-
-        public float Mass;
-        public float BaseMass;
-        public float Speed;
-        public float MaxSpeed;
-        public float EnginePower;
-
-        public string Name;
-        public string Description;
-
-        public GameObject GmObject;
-
-        public List<Item> Inventory;
     }
 }

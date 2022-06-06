@@ -85,14 +85,14 @@ public class UIController : MonoBehaviour
     {
         for (; ; )
         {
-            healthBar.value = (float)shipController.SShip.Health / shipController.SShip.MaxHealth;
-            energyBar.value = (float)shipController.SShip.Energy / shipController.SShip.MaxEnergy;
+            healthBar.value = shipController.SShip.HealthSystem.GetHealthNormalized();
+            energyBar.value = shipController.SShip.EnergySystem.GetEnergyNormalized();
 
             if (debugger != null)
             {
-                debugger.text = $"HP: {shipController.SShip.Health}/{shipController.SShip.MaxHealth} | {(float)shipController.SShip.Health / shipController.SShip.MaxHealth}\n"
-                    + $"Energy: {shipController.SShip.Energy}/{shipController.SShip.MaxEnergy}\n | {(float)shipController.SShip.Energy / shipController.SShip.MaxEnergy}"
-                    + $"";
+                debugger.text = $"HP: {shipController.SShip.Health}/{shipController.SShip.MaxHealth} | {shipController.SShip.HealthSystem.GetHealthNormalized()}\n"
+                    + $"Energy: {shipController.SShip.EnergySystem.Energy}/{shipController.SShip.EnergySystem.EnergyMax} | {shipController.SShip.EnergySystem.GetEnergyNormalized()}\n"
+                    + $"Speed: {GetComponent<Rigidbody>().velocity.magnitude}";
             }
 
 
