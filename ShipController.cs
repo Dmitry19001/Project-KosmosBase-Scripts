@@ -23,6 +23,9 @@ public class ShipController : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] GameObject laserBullet;
 
+    [Header("Materials")]
+    [SerializeField] List<Material> _engineMaterials;
+
     [HideInInspector] public Transform LookOffset;
     public SpaceShip SShip;
 
@@ -199,5 +202,10 @@ public class ShipController : MonoBehaviour
 
 
         Debug.Log($"Damage taken: {damage} and HP remains: {SShip.Health}");
+    }
+
+    private void EngineGlow(float glowMode)
+    {
+        //TODO: engine smooth glow effect
     }
 }

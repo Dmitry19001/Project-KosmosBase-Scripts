@@ -63,7 +63,6 @@ public class UIController : MonoBehaviour
         {
             Debug.DrawRay(shipController.LookOffset.position, shipController.LookOffset.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             CorrectCrosshair(hit.point);
-            //print(hit.point);
             CheckHover(hit);
         }
         else
@@ -78,7 +77,7 @@ public class UIController : MonoBehaviour
     {
         crossHair.gameObject.SetActive(true);
         Vector2 screenPos = Camera.main.WorldToScreenPoint(point);
-        crossHair.rectTransform.position = screenPos /*- new Vector2(10,10)*/;
+        crossHair.rectTransform.position = screenPos;
     }
 
     IEnumerator UpdateHUD()
@@ -105,14 +104,11 @@ public class UIController : MonoBehaviour
         if (hit.transform.CompareTag("Asteroid"))
         {
             if (!DamageCanvas.activeSelf)
-                DamageCanvas.SetActive(true); 
-            
-            //var posMultiplier = hit.transform.localScale.y + 2;            
-            //print($"cos {Mathf.Cos(Camera.main.transform.rotation.x)} sin {Mathf.Sin(Camera.main.transform.rotation.z)}");
-            //DamageCanvas.transform.position = hit.transform.position + new Vector3(Mathf.Cos(Camera.main.transform.rotation.x) * posMultiplier, posMultiplier, Mathf.Sin(Camera.main.transform.rotation.z) * posMultiplier);
-            //DamageCanvas.transform.rotation = Camera.main.transform.rotation;
-            var asteroid = hit.transform.GetComponent<AsteroidBehavior>().asteroid;
-            //HealthProgress.maxValue = asteroid.MaxHealth;
+                DamageCanvas.SetActive(true);
+
+
+            var asteroid = hit.transform.GetComponent<Asteroid>();
+
             enemyHealthProgress.value = (float)asteroid.Health / asteroid.MaxHealth;            
             enemyName.text = "Asteroid";
         }
