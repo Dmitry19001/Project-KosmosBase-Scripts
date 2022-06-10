@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class Asteroid : PhysicalObject
 {
-    [SerializeField] private Item[] _droppables;
+    [SerializeField] private GameObject[] _droppables;
+    //private ItemType _priorityResource;
+    private bool _isBig;
     //public Asteroid(
     //    string name = "Asteroid",
     //    string description = "Unhabited and dead peace of stardust!",
@@ -23,6 +25,11 @@ public class Asteroid : PhysicalObject
 
     private void Start()
     {
+        //for (int i = 0; i < Enum.GetValues(typeof(ItemType)).Length; i++)
+        //{
+            
+        //}
+
         HealthSystem.Reset();
         HealthSystem.OnDead += HpSystem_OnDead;
     }
@@ -32,15 +39,16 @@ public class Asteroid : PhysicalObject
         DestroySelf();
     }
 
-    public Item[] Droppables
+    public GameObject[] Droppables
     {
         get { return _droppables; }
-        private set { _droppables = value; }
+        set { _droppables = value; }
     }
 
     public override void DestroySelf()
     {
-        Debug.Log("[Asteroid] Should be destroyed");
+        //Debug.Log("[Asteroid] Should be destroyed");
+        Drop();
         Core.Explode(gameObject, 2f);
     }
 
