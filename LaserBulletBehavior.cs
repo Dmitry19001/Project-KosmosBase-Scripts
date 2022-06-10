@@ -40,15 +40,12 @@ public class LaserBulletBehavior : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (!collision.transform.CompareTag("Bullet") && Owner.name != collision.name)
+        var damagable = collision.GetComponent<IDamageable>();
+        if (damagable != null && Owner.name != collision.name)
         {
             Destroy(gameObject);
-            Debug.Log($"Destroyed by [{collision.transform.tag}]{collision.transform.name}");
-            if (collision.transform.CompareTag("Asteroid"))
-            {
-                var asteroid = collision.GetComponent<AsteroidBehavior>();
-                asteroid.GetDamage(dealingDamage);
-            }
+            //Debug.Log($"Destroyed by [{collision.transform.tag}]{collision.transform.name}");
+            damagable.Damage(dealingDamage);
         }
     }
 }

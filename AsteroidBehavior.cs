@@ -29,11 +29,6 @@ public class AsteroidBehavior : MonoBehaviour
         GenerateOres();
     }
 
-    public void GetDamage(int damage)
-    {
-        Asteroid.Damage(damage);
-    }
-
     private void GenerateOres()
     {
         if (_orePrefab != null && _oreSpawnPoints?.Length > 0)
@@ -90,6 +85,6 @@ public class AsteroidBehavior : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        GetDamage(Asteroid.Health);
+       
     }
 }

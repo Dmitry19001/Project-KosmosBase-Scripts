@@ -3,11 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
+
+[RequireComponent(typeof(HealthSystem))]
+[RequireComponent(typeof(InventorySystem))]
 public class SpaceShip : PhysicalObject, IDamageable, IChargeable
 {
     [Header("Params")]
-    [SerializeField] private EnergySystem _energySystem;
+    private EnergySystem _energySystem;
+    private HealthSystem _healthSystem;
+    private InventorySystem _inventorySystem;
 
     [SerializeField] private int _startEnergy = 200;
 
@@ -15,26 +19,27 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
     [SerializeField] private float _maxSpeed = 100f;
     [SerializeField] private float _enginePower = 100f;
 
-    [SerializeField] private int _inventory_size = 10;
-
     [Header("Other")]
-    public bool IsPlayer;
-
-    [SerializeField] private List<Item> _inventory;
-    
+    public bool IsPlayer;   
 
     [SerializeField] private Vector3 _position;
+
+    private void Awake()
+    {
+        HealthSystem = GetComponent<HealthSystem>();
+        InventorySystem = GetComponent<InventorySystem>();
+
+        HealthSystem.OnDead += HpSystem_OnDead;
+    }
 
     private void Start()
     {
         HealthSystem.Reset();
 
         _energySystem = new(_startEnergy);
-        Inventory = new List<Item>(_inventory_size);
 
         ComputeMass();
-
-        HealthSystem.OnDead += HpSystem_OnDead;
+        
     }
 
     private void HpSystem_OnDead(object sender, EventArgs e)
@@ -82,18 +87,22 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
         set => _position = value;
     }
 
-    public int InventorySize => Inventory.Count;
-
     public void ComputeMass()
     {
         float mass = BaseMass;
 
-        if (Inventory != null && Inventory.Count > 0)
+        if (InventorySystem.Inventory != null && InventorySystem.InventorySize > 0)
         {
-            for (int i = 0; i < Inventory.Count; i++)
+            for (int i = 0; i < InventorySystem.InventorySize; i++)
             {
-                Item item = Inventory[i];
-                mass += item.Mass;
+                GameObject itemGm = InventorySystem.Inventory[i];
+
+                if (itemGm != null)
+                {
+                    Item item = itemGm.GetComponent<Item>();
+                    mass += item.Mass;
+                }
+
                 //TODO Computing mass by items weight
                 //After Item class implementation
             }
@@ -104,39 +113,10 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
             Mass = mass;
     }
 
-    public List<Item> Inventory
-    {
-        get => _inventory;
-        //Unsafe to use, will overwrite everything in exsisting inventory
-        set => _inventory = value;
-    }
     public EnergySystem EnergySystem { get => _energySystem; private set => _energySystem = value; }
+    public HealthSystem HealthSystem { get => _healthSystem; private set => _healthSystem = value; }
+    public InventorySystem InventorySystem { get => _inventorySystem; private set => _inventorySystem = value; }
 
-    public void ChangeInventorySize(int changeTo)
-    {
-        List<Item> oldInv = _inventory;
-
-        _inventory = new List<Item>(changeTo);
-
-        //TODO: DROP
-        //Should drop items that doesn't fit inside after size change
-
-        _inventory.AddRange(oldInv);
-    }
-
-    public void InventoryAdd(Item item)
-    {
-        //TODO: inventory item adding 
-    }
-
-    public void InventoryRemove(Item item = null, int index = -1)
-    {
-        //if Method called with wrong or empty params
-        if (item != null && index < 0)
-            return;
-
-        //TODO: inventory item dropping 
-    }
 
     public override void DestroySelf()
     {
@@ -151,5 +131,10 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
     public void Discharge(int chargeAmount)
     {
         EnergySystem.Discharge(chargeAmount);
+    }
+
+    public void Damage(int damageAmount)
+    {
+        HealthSystem.Damage(damageAmount);
     }
 }

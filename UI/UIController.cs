@@ -89,7 +89,7 @@ public class UIController : MonoBehaviour
 
             if (debugger != null)
             {
-                debugger.text = $"HP: {shipController.SShip.Health}/{shipController.SShip.MaxHealth} | {shipController.SShip.HealthSystem.GetHealthNormalized()}\n"
+                debugger.text = $"HP: {shipController.SShip.HealthSystem.Health}/{shipController.SShip.HealthSystem.HealthMax} | {shipController.SShip.HealthSystem.GetHealthNormalized()}\n"
                     + $"Energy: {shipController.SShip.EnergySystem.Energy}/{shipController.SShip.EnergySystem.EnergyMax} | {shipController.SShip.EnergySystem.GetEnergyNormalized()}\n"
                     + $"Speed: {GetComponent<Rigidbody>().velocity.magnitude}";
             }
@@ -109,7 +109,7 @@ public class UIController : MonoBehaviour
 
             var asteroid = hit.transform.GetComponent<Asteroid>();
 
-            enemyHealthProgress.value = (float)asteroid.Health / asteroid.MaxHealth;            
+            enemyHealthProgress.value = (float)asteroid.HealthSystem.Health / asteroid.HealthSystem.HealthMax;            
             enemyName.text = "Asteroid";
         }
     }

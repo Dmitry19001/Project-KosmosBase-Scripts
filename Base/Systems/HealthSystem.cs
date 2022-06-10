@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class HealthSystem
+public class HealthSystem : MonoBehaviour
 {
     public event EventHandler OnHealthChanged;
     public event EventHandler OnHealthMaxChanged;
@@ -22,13 +22,13 @@ public class HealthSystem
             OnHealthMaxChanged?.Invoke(this, EventArgs.Empty);
         }
     }
-    public int Health { get => _health; set => _health = value; }
+    public int Health { get => _health; private set => _health = value; }
 
-    public HealthSystem(int healhtMax)
-    {
-        HealthMax = healhtMax;
-        Health = healhtMax;
-    }
+    //public HealthSystem(int healhtMax)
+    //{
+    //    HealthMax = healhtMax;
+    //    Health = healhtMax;
+    //}
 
     public float GetHealthNormalized()
     {

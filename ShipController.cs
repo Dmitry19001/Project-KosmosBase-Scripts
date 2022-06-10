@@ -63,13 +63,6 @@ public class ShipController : MonoBehaviour
         }
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    Debug.DrawRay(transform.position, transform.forward * 10, Color.red);
-    //    Debug.DrawRay(transform.position, transform.right * 10, Color.blue);
-    //    Debug.DrawRay(transform.position, transform.up * 10, Color.green);
-    //}
-
     private void Shoot_performed(InputAction.CallbackContext context)
     {
         StartCoroutine(ShootCoroutine());
@@ -201,7 +194,17 @@ public class ShipController : MonoBehaviour
         SShip.Damage(damage);
 
 
-        Debug.Log($"Damage taken: {damage} and HP remains: {SShip.Health}");
+        Debug.Log($"Damage taken: {damage} and HP remains: {SShip.HealthSystem.Health}");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        var collectable = other.GetComponent<ICollectable>();
+
+        if (collectable != null)
+        {
+            collectable.Pickup(gameObject);
+        }
     }
 
     private void EngineGlow(float glowMode)

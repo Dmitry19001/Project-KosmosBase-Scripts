@@ -3,33 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Asteroid : PhysicalObject
+[RequireComponent(typeof(HealthSystem))]
+public class Asteroid : PhysicalObject, IDamageable
 {
     [SerializeField] private GameObject[] _droppables;
+    private HealthSystem _healthSystem;
     //private ItemType _priorityResource;
     private bool _isBig;
-    //public Asteroid(
-    //    string name = "Asteroid",
-    //    string description = "Unhabited and dead peace of stardust!",
-    //    int maxHealth = 300,
-    //    float baseMass = 100f,
-    //    GameObject gameObject = null,
-    //    Item[] droppables = null
-    //    ) : base(name, description, maxHealth, baseMass, gameObject)
-    //{
 
-    //    Droppables = droppables;
 
-    //    
-    //}
+    private void Awake()
+    {
+        HealthSystem = GetComponent<HealthSystem>();
+    }
 
     private void Start()
     {
-        //for (int i = 0; i < Enum.GetValues(typeof(ItemType)).Length; i++)
-        //{
-            
-        //}
-
         HealthSystem.Reset();
         HealthSystem.OnDead += HpSystem_OnDead;
     }
@@ -45,6 +34,9 @@ public class Asteroid : PhysicalObject
         set { _droppables = value; }
     }
 
+    public bool IsBig { get => _isBig; }
+    public HealthSystem HealthSystem { get => _healthSystem; private set => _healthSystem = value; }
+
     public override void DestroySelf()
     {
         //Debug.Log("[Asteroid] Should be destroyed");
@@ -56,7 +48,16 @@ public class Asteroid : PhysicalObject
     {
         if (Droppables != null)
         {
-            //TODO: DROP LOGIC
+            for (int i = 0; i < Droppables.Length; i++)
+            {
+                var drop = Droppables[i];
+                drop.transform.SetParent(null);
+            }
         }
+    }
+
+    public void Damage(int damageAmount)
+    {
+        HealthSystem.Damage(damageAmount);
     }
 }
