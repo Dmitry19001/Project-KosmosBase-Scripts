@@ -3,23 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Asteroid : PhysicalObject
+[RequireComponent(typeof(HealthSystem))]
+public class Asteroid : PhysicalObject, IDamageable
 {
-    [SerializeField] private Item[] _droppables;
-    //public Asteroid(
-    //    string name = "Asteroid",
-    //    string description = "Unhabited and dead peace of stardust!",
-    //    int maxHealth = 300,
-    //    float baseMass = 100f,
-    //    GameObject gameObject = null,
-    //    Item[] droppables = null
-    //    ) : base(name, description, maxHealth, baseMass, gameObject)
-    //{
+    [SerializeField] private GameObject[] _droppables;
+    private HealthSystem _healthSystem;
+    //private ItemType _priorityResource;
+    private bool _isBig;
 
-    //    Droppables = droppables;
 
-    //    
-    //}
+    private void Awake()
+    {
+        HealthSystem = GetComponent<HealthSystem>();
+    }
 
     private void Start()
     {
@@ -32,15 +28,19 @@ public class Asteroid : PhysicalObject
         DestroySelf();
     }
 
-    public Item[] Droppables
+    public GameObject[] Droppables
     {
         get { return _droppables; }
-        private set { _droppables = value; }
+        set { _droppables = value; }
     }
+
+    public bool IsBig { get => _isBig; }
+    public HealthSystem HealthSystem { get => _healthSystem; private set => _healthSystem = value; }
 
     public override void DestroySelf()
     {
-        Debug.Log("[Asteroid] Should be destroyed");
+        //Debug.Log("[Asteroid] Should be destroyed");
+        Drop();
         Core.Explode(gameObject, 2f);
     }
 
@@ -48,7 +48,16 @@ public class Asteroid : PhysicalObject
     {
         if (Droppables != null)
         {
-            //TODO: DROP LOGIC
+            for (int i = 0; i < Droppables.Length; i++)
+            {
+                var drop = Droppables[i];
+                drop.transform.SetParent(null);
+            }
         }
+    }
+
+    public void Damage(int damageAmount)
+    {
+        HealthSystem.Damage(damageAmount);
     }
 }

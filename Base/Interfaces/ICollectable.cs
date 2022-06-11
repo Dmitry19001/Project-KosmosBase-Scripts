@@ -4,9 +4,5 @@ using UnityEngine;
 
 public interface ICollectable
 {
-    public void Pickup()
-    {
-        ///Inventory system first!
-        ///Code here
-    }
+    public void Pickup(GameObject reciever);
 }
