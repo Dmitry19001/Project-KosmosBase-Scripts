@@ -138,11 +138,11 @@ public class ShipController : MonoBehaviour
 
         if (direction.magnitude == 0 && directionY.magnitude == 0)
         {
-            forceStop();
+            ForceStop();
         }
     }
 
-    private void forceStop()
+    private void ForceStop()
     {
         if (_rb.velocity.magnitude > 0)
         {
@@ -198,10 +198,8 @@ public class ShipController : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {
-        var collectable = other.GetComponent<ICollectable>();
-
-        if (collectable != null)
+    {    
+        if (other.TryGetComponent<ICollectable>(out var collectable))
         {
             collectable.Pickup(gameObject);
         }

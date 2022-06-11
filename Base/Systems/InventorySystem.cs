@@ -13,30 +13,37 @@ public class InventorySystem : MonoBehaviour
     public event EventHandler OnRemoveFromInventory;
     public event EventHandler OnAddToInventory;
 
+    [SerializeField] private int _startingSlots;
+
     [SerializeField] private GameObject[] _inventory;
     
     public GameObject[] Inventory { get => _inventory; private set => _inventory = value; }
     public int InventorySize { get => Inventory.Length; }
 
-    public void AddItem(GameObject item, bool silent = false)
+    private void Awake()
+    {
+        Inventory = new GameObject[_startingSlots];
+    }
+
+    public bool AddItem(GameObject item, bool silent = false)
     {
         for (int i = 0; i < Inventory.Length; i++)
         {
             if (Inventory[i] == null)
             {
                 Inventory[i] = item;
-
                 if (!silent) 
                 { 
                     OnAddToInventory?.Invoke(this, EventArgs.Empty);
                     OnInventoryChanged?.Invoke(this, EventArgs.Empty);
                 }
 
-                return; //Success
+                return true; //Success
             }
         }
 
-        DropItem(item);
+        //Well fuck
+        return false;
     }
 
     public void RemoveItem(int id)
@@ -51,9 +58,13 @@ public class InventorySystem : MonoBehaviour
         OnInventoryChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void DropItem(GameObject item, bool silent = false)
+    public void DropItem(int id, bool silent = false)
     {
+        var item = Inventory[id];
+
         item.GetComponent<Item>().DropSelf();
+
+        Inventory[id] = null;
 
         if (!silent)
         {
@@ -69,7 +80,7 @@ public class InventorySystem : MonoBehaviour
             var item = Inventory[i];
             if (item != null)
             {
-                DropItem(item, silent);
+                DropItem(i, silent);
                 Inventory[i] = null;
             }
         }
@@ -90,7 +101,10 @@ public class InventorySystem : MonoBehaviour
 
             for (int i = 0; i < temp.Length; i++)
             {
-                AddItem(temp[i], true);
+                if(!AddItem(temp[i], true))
+                {
+                    temp[i].GetComponent<Item>().DropSelf(); ;
+                }
             }
 
             OnInventorySizeChanged?.Invoke(this, EventArgs.Empty);

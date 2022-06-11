@@ -30,6 +30,12 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
         InventorySystem = GetComponent<InventorySystem>();
 
         HealthSystem.OnDead += HpSystem_OnDead;
+        InventorySystem.OnAddToInventory += InventorySystem_OnAddToInventory;
+    }
+
+    private void InventorySystem_OnAddToInventory(object sender, EventArgs e)
+    {
+        Debug.Log("SpaceShip received item to inventory");
     }
 
     private void Start()

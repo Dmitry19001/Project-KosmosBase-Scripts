@@ -21,7 +21,7 @@ public class Item : PhysicalObject, ICollectable
     public void DropSelf()
     {
         gameObject.SetActive(true);
-        transform.position = Vector3.zero + new Vector3(0, -3, 0); //Should appear at the bottom of the spaceship
+        transform.localPosition = Vector3.zero + new Vector3(0, -6, 0); //Should appear at the bottom of the spaceship
         transform.SetParent(null);
     }
 
@@ -29,9 +29,12 @@ public class Item : PhysicalObject, ICollectable
     {
         var inventory = reciever.GetComponent<InventorySystem>();
 
-        gameObject.SetActive(false);
-        transform.SetParent(reciever.transform);
+        if (inventory.AddItem(gameObject))
+        {
+            Debug.Log($"{reciever.name} is pickuping : {gameObject.name}");
 
-        inventory.AddItem(gameObject);
+            gameObject.SetActive(false);
+            transform.SetParent(reciever.transform);
+        }
     }
 }
