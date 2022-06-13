@@ -67,6 +67,7 @@ public class AsteroidBehavior : MonoBehaviour
                             var itm = loot.GetComponent<Item>();
                             itm.Name = ores[x].Name;
                             itm.BaseMass = ores[x].BaseMass;
+                            itm.ItemType = ores[x];
 
                             droppables.Add(loot);
 
