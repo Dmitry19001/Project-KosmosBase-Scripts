@@ -25,6 +25,11 @@ public class InventorySystem : MonoBehaviour
         Inventory = new GameObject[_startingSlots];
     }
 
+    private void Start()
+    {
+        OnInventoryChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     public bool AddItem(GameObject item, bool silent = false)
     {
         for (int i = 0; i < Inventory.Length; i++)

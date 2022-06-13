@@ -30,9 +30,10 @@ public class ShipController : MonoBehaviour
     public SpaceShip SShip;
 
     private Rigidbody _rb;
-    private PlayerInput _input;
+    public PlayerInput PlayerInput;
     private Transform[] _weapons;
 
+    public bool CanMove = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,9 +47,9 @@ public class ShipController : MonoBehaviour
     {
         LookOffset = transform.Find("LookOffset");
 
-        _input = new PlayerInput();
+        PlayerInput = new PlayerInput();
 
-        _input.Player.Shoot.performed += Shoot_performed;
+        PlayerInput.Player.Shoot.performed += Shoot_performed;
     }
 
     private void GetWeapons()
@@ -71,12 +72,12 @@ public class ShipController : MonoBehaviour
 
     private void OnEnable()
     {
-        _input.Player.Enable();
+        PlayerInput.Player.Enable();
     }
 
     private void OnDisable()
     {
-        _input.Player.Disable();
+        PlayerInput.Player.Disable();
     }
 
     private void Update()
@@ -85,18 +86,25 @@ public class ShipController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 move_direction = _input.Player.Move.ReadValue<Vector2>();
-        Vector2 move_direction_y = _input.Player.UpDown.ReadValue<Vector2>();      
-        Vector2 look_direction = _input.Player.Look.ReadValue<Vector2>();
+        if (CanMove)
+        {
+            Vector2 move_direction = PlayerInput.Player.Move.ReadValue<Vector2>();
+            Vector2 move_direction_y = PlayerInput.Player.UpDown.ReadValue<Vector2>();
+            Vector2 look_direction = PlayerInput.Player.Look.ReadValue<Vector2>();
 
-        Vector3 roll_direction = _input.Player.Roll.ReadValue<Vector3>();
-        Vector3 rotate_direction = new(look_direction.y * -1 * mouseSensitivity, look_direction.x * mouseSensitivity, roll_direction.x * -1);
+            Vector3 roll_direction = PlayerInput.Player.Roll.ReadValue<Vector3>();
+            Vector3 rotate_direction = new(look_direction.y * -1 * mouseSensitivity, look_direction.x * mouseSensitivity, roll_direction.x * -1);
 
-        Move(move_direction, move_direction_y);
-        Rotate(rotate_direction);
-        
-        SShip.SetSpeed(_rb.velocity.magnitude);
-        SShip.Position = transform.position;     
+            Move(move_direction, move_direction_y);
+            Rotate(rotate_direction);
+
+            SShip.SetSpeed(_rb.velocity.magnitude);
+            SShip.Position = transform.position;
+        }
+        else
+        {
+            ForceStop();
+        }
     }
 
     public void Shoot()
@@ -118,7 +126,7 @@ public class ShipController : MonoBehaviour
     {
         for ( ; ; )
         {
-            if (_input.Player.Shoot.ReadValue<float>() == 1f)
+            if (PlayerInput.Player.Shoot.ReadValue<float>() == 1f && CanMove)
             {
                 Shoot();
             }

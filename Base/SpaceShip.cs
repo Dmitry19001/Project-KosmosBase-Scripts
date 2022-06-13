@@ -20,7 +20,7 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
     [SerializeField] private float _enginePower = 100f;
 
     [Header("Other")]
-    public bool IsPlayer;   
+    public bool IsPlayer;
 
     [SerializeField] private Vector3 _position;
 
@@ -29,7 +29,7 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
         HealthSystem = GetComponent<HealthSystem>();
         InventorySystem = GetComponent<InventorySystem>();
 
-        HealthSystem.OnDead += HpSystem_OnDead;
+        HealthSystem.OnDead += HealthSystem_OnDead;
         InventorySystem.OnAddToInventory += InventorySystem_OnAddToInventory;
     }
 
@@ -48,7 +48,7 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
         
     }
 
-    private void HpSystem_OnDead(object sender, EventArgs e)
+    private void HealthSystem_OnDead(object sender, EventArgs e)
     {
         DestroySelf();
     }
