@@ -126,7 +126,7 @@ public class SpaceShip : PhysicalObject, IDamageable, IChargeable
 
     public override void DestroySelf()
     {
-        Core.Explode(gameObject, 1f, null, IsPlayer);
+        Core.Explode(gameObject, 1f, null, !IsPlayer);
     }
 
     public void Charge(int chargeAmount)

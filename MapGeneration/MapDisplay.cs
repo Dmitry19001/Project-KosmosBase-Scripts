@@ -6,12 +6,9 @@ using UnityEngine;
 public class MapDisplay : MonoBehaviour
 {
     public Renderer textureRenderer;
-    public MeshFilter meshFilter;
-    public MeshRenderer meshRenderer;
 
     private void Start()
     {
-        meshRenderer.gameObject.SetActive(false);
         textureRenderer.gameObject.SetActive(false);
     }
 

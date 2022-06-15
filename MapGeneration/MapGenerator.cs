@@ -12,7 +12,7 @@ public class MapGenerator : MonoBehaviour
 
 	public Noise.NormalizeMode normalizeMode;
 
-	public const int mapChunkSize = 239;
+	public int mapChunkSize = 239;
 	[Range(0, 6)]
 	public int editorPreviewLOD;
 	public float noiseScale;
@@ -51,7 +51,7 @@ public class MapGenerator : MonoBehaviour
 		}
 		else if (drawMode == DrawMode.ColorMap)
 		{
-			display.DrawTexture(TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
+            display.DrawTexture(TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
 		}
 		else if (drawMode == DrawMode.FalloffMap)
         {
